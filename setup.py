@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="visualizer-torch",
-    version="0.0.1",
+    version="0.0.2",
     author="neonsecret",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -18,5 +18,5 @@ setuptools.setup(
     package_dir={"": "visualizer"},
     packages=setuptools.find_packages(where="visualizer"),
     python_requires=">=3.6",
-    download_url="https://github.com/bironsecret/pytorch-model-visualizer/archive/refs/tags/v0.0.1.tar.gz"
+    download_url="https://github.com/bironsecret/pytorch-model-visualizer/archive/refs/tags/v0.02.tar.gz"
 )

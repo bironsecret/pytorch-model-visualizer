@@ -10,8 +10,9 @@ class Visualizer:
             self.model_name = name
 
     def visualize_loop(self, epoch: int, model=None, total_loss=None, total_correct=None, accuracy=None,
-                       other_params: dict = None):
+                       other_params: dict = None, tb=None):
         """
+        :param tb: SummaryWriter, if None then it will be created
         :param epoch: epoch number
         :param model: the model you want to visualize, if None then the class one will be used
         :param total_loss: scalar for tensorboard
@@ -21,6 +22,8 @@ class Visualizer:
         :return SummaryWriter instance, use it to close the writer when loop is over
         example usage in README.md
         """
+        if tb is not None:
+            self.tb = tb
         if total_loss is not None:
             self.tb.add_scalar("Loss", total_loss, epoch)
         if total_correct is not None:
@@ -40,10 +43,8 @@ class Visualizer:
     def _flatten_model(self, modules, start_name):
         def flatten_list(_2d_list):
             flat_list = []
-            # Iterate through the outer list
             for element in _2d_list:
                 if type(element) is list:
-                    # If the element is of type list, iterate through the sublist
                     for item in element:
                         flat_list.append(item)
                 else:
