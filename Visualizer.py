@@ -19,7 +19,7 @@ class Visualizer:
         :param accuracy:  scalar for tensorboard
         :param other_params: a list containing other parameters to add as scalars
         :return SummaryWriter instance, use it to close the writer when loop is over
-        example usage in README
+        example usage in README.md
         """
         if total_loss is not None:
             self.tb.add_scalar("Loss", total_loss, epoch)
