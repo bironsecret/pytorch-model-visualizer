@@ -1,9 +1,41 @@
+from torch.utils.tensorboard import SummaryWriter
+
+
 class Visualizer:
     def __init__(self, model=None, name=None):
+        self.tb = SummaryWriter()
         if model is not None:
             self.model = model
         if name is not None:
             self.model_name = name
+
+    def visualize_loop(self, epoch: int, model=None, total_loss=None, total_correct=None, accuracy=None,
+                       other_params: dict = None):
+        """
+        :param epoch: epoch number
+        :param model: the model you want to visualize, if None then the class one will be used
+        :param total_loss: scalar for tensorboard
+        :param total_correct: scalar for tensorboard
+        :param accuracy:  scalar for tensorboard
+        :param other_params: a list containing other parameters to add as scalars
+        :return SummaryWriter instance, use it to close the writer when loop is over
+        example usage in README
+        """
+        if total_loss is not None:
+            self.tb.add_scalar("Loss", total_loss, epoch)
+        if total_correct is not None:
+            self.tb.add_scalar("Correct", total_correct, epoch)
+        if accuracy is not None:
+            self.tb.add_scalar("Accuracy", accuracy, epoch)
+        if other_params is not None:
+            for param in other_params:
+                self.tb.add_scalar(param, other_params[param])
+
+        net = model if model is not None else self.model
+        learnable_parts = self._get_learnable_parts(net)
+        for part, name in learnable_parts:
+            self.tb.add_histogram(name, part, epoch)
+        return self.tb
 
     def _flatten_model(self, modules, start_name):
         def flatten_list(_2d_list):
