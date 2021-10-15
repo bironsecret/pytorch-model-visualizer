@@ -15,8 +15,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "visualizer"},
-    packages=setuptools.find_packages(where="visualizer"),
+    packages=setuptools.find_packages(),
     python_requires=">=3.6",
-    download_url="https://github.com/bironsecret/pytorch-model-visualizer/archive/refs/tags/v0.02.tar.gz"
+    download_url="https://github.com/bironsecret/pytorch-model-visualizer/archive/refs/tags/v0.0.3.tar.gz"
 )

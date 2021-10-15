@@ -34,8 +34,7 @@ Example usage in a loop:
     model = ExampleNet()  # the model you want to visualize
 
     (...)
-    tb = None
     for ep in range(epochs):
         (...)
-        tb = vis.visualize_loop(ep, model, tb=tb, total_loss=total_loss, other_params={"Some param": ["some_value"]})
-    tb.close()
+        vis.visualize_loop(ep, model, total_loss=total_loss, other_params={"Some param": ["some_value"]})
+    vis.close_writer()

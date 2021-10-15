@@ -10,9 +10,8 @@ class Visualizer:
             self.model_name = name
 
     def visualize_loop(self, epoch: int, model=None, total_loss=None, total_correct=None, accuracy=None,
-                       other_params: dict = None, tb=None):
+                       other_params: dict = None):
         """
-        :param tb: SummaryWriter, if None then it will be created
         :param epoch: epoch number
         :param model: the model you want to visualize, if None then the class one will be used
         :param total_loss: scalar for tensorboard
@@ -22,8 +21,6 @@ class Visualizer:
         :return SummaryWriter instance, use it to close the writer when loop is over
         example usage in README.md
         """
-        if tb is not None:
-            self.tb = tb
         if total_loss is not None:
             self.tb.add_scalar("Loss", total_loss, epoch)
         if total_correct is not None:
@@ -38,7 +35,9 @@ class Visualizer:
         learnable_parts = self._get_learnable_parts(net)
         for part, name in learnable_parts:
             self.tb.add_histogram(name, part, epoch)
-        return self.tb
+
+    def close_writer(self):
+        self.tb.close()
 
     def _flatten_model(self, modules, start_name):
         def flatten_list(_2d_list):
@@ -65,12 +64,19 @@ class Visualizer:
 
         return flatten_list(ret), flatten_list(names)
 
-    def _get_learnable_parts(self, net, basename=None):
+    def _get_learnable_parts(self, net, get_weights=True, basename=None):
         if basename is None:
             basename = str(net.__class__).split(".")[-1].replace("'>", "")
         parts, names = self._flatten_model(net, basename)
         for p in parts:
-            yield p, names[parts.index(p)]
+            if not get_weights:
+                yield p, names[parts.index(p)]
+            else:
+                try:
+                    yield p.bias, names[parts.index(p)] + ".bias"
+                    yield p.weight, names[parts.index(p)]
+                except:
+                    pass
 
     def flatten_model(self):
         return self._flatten_model(self.model, self.model_name)
